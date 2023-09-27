@@ -9,6 +9,10 @@ def validate_email():
     data = request.get_json()
     email = data.get('email')
 
+     # Check if 'email' is None or empty
+    if email is None or email.strip() == '':
+        return jsonify({'message': 'Email is missing'}), 400
+
     # Perform email format validation using regular expressions
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return jsonify({'message': 'Invalid email format'}), 400
