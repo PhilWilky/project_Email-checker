@@ -4,17 +4,20 @@ import socket
 
 app = Flask(__name__)
 
+# Improved email regex pattern based on RFC 5322
+EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
 @app.route('/validate-email', methods=['POST'])
 def validate_email():
     data = request.get_json()
     email = data.get('email')
 
-     # Check if 'email' is None or empty
+    # Check if 'email' is None or empty
     if email is None or email.strip() == '':
         return jsonify({'message': 'Email is missing'}), 400
 
-    # Perform email format validation using regular expressions
-    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+    # Perform email format validation using the improved regular expression
+    if not re.match(EMAIL_REGEX, email):
         return jsonify({'message': 'Invalid email format'}), 400
 
     # Split the email address to extract the domain
@@ -37,8 +40,6 @@ def validate_email():
     # Return a success message if everything is valid
     return jsonify({'message': 'Email is valid'}), 200
 
-
-
 # Create a Route for index.html:
 @app.route('/', methods=['GET'])
 def index():
@@ -46,7 +47,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-## curl test.
-## curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"phil.wilkinson.premvan.com\"}" http://localhost:5000/validate-email
