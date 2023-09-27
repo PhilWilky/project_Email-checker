@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import re
 import socket
 
@@ -34,10 +34,14 @@ def validate_email():
     return jsonify({'message': 'Email is valid'}), 200
 
 
+
+# Create a Route for index.html:
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
 
 ## curl test.

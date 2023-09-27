@@ -1,0 +1,50 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Validation Tool</title>
+</head>
+<body>
+    <h1>Email Validation Tool</h1>
+    <form method="POST" action="/validate-email">
+        <label for="email">Enter Email:</label>
+        <input type="text" id="email" name="email" required>
+        <button type="submit">Validate</button>
+    </form>
+    <div id="result"></div>
+</body>
+</html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const resultDiv = document.getElementById('result');
+
+      form.addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          const emailInput = document.getElementById('email');
+          const email = emailInput.value;
+
+          // Prepare the JSON data
+          const jsonData = JSON.stringify({ email });
+
+          // Send a POST request to the Flask endpoint with the correct Content-Type header
+          fetch('/validate-email', {
+              method: 'POST',
+              body: jsonData,
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then(response => response.json())
+          .then(data => {
+              resultDiv.textContent = data.message;
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+      });
+  });
+</script>
